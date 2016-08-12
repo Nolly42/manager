@@ -1,0 +1,49 @@
+html{
+	 height: 100% 
+}
+
+body{
+	 height: 100%;
+	 margin: 0; 
+	 padding: 0;
+	 display:-webkit-flex;
+	 display:flex;
+	 -webkit-flex-direction: column;
+	 flex-direction: column;
+}
+
+input, textarea, select, option {
+	margin:0;
+	padding:0;	
+}
+	 
+#navi{
+	height:40px;
+	background-color:#0075A4;
+	width:100%;
+	display:-webkit-flex;
+	display:flex;
+}
+	
+/* 	
+	Toolbar
+*/
+
+#main{
+	 height: 100%;
+	 width:100%;
+	 display:flex;
+	 display:-webkit-flex;
+	 z-index:1;
+	 color:#FFF;
+	 -webkit-flex: 1;
+     flex: 1;
+}
+
+#map{
+	 height: 100%;
+	-webkit-flex:1;
+	flex:1;
+}
+
+	
