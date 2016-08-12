@@ -1,0 +1,215 @@
+-- phpMyAdmin SQL Dump
+-- version 4.4.15.7
+-- http://www.phpmyadmin.net
+--
+-- Host: localhost
+-- Erstellungszeit: 12. Aug 2016 um 17:01
+-- Server-Version: 5.5.50-0+deb7u2-log
+-- PHP-Version: 5.3.29
+
+SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
+SET time_zone = "+00:00";
+
+
+/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
+/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
+/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
+/*!40101 SET NAMES utf8mb4 */;
+
+--
+-- Datenbank: `usr_web896_8`
+--
+
+-- --------------------------------------------------------
+
+--
+-- Tabellenstruktur für Tabelle `ATTRIBUTES`
+--
+
+CREATE TABLE IF NOT EXISTS `ATTRIBUTES` (
+  `ATTRIBUTE_ID` int(20) NOT NULL,
+  `DESCRIPTION` varchar(50) NOT NULL,
+  `MIN_VALUE` float NOT NULL,
+  `MAX_VALUE` float NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- --------------------------------------------------------
+
+--
+-- Tabellenstruktur für Tabelle `CREATURES`
+--
+
+CREATE TABLE IF NOT EXISTS `CREATURES` (
+  `CREATURE_ID` int(20) NOT NULL,
+  `TYPE_ID` int(4) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- --------------------------------------------------------
+
+--
+-- Tabellenstruktur für Tabelle `CREATURE_TO_ATTRIBUTE`
+--
+
+CREATE TABLE IF NOT EXISTS `CREATURE_TO_ATTRIBUTE` (
+  `CREATURE_ID` int(20) NOT NULL,
+  `ATTRIBUTE_ID` int(20) NOT NULL,
+  `VALUE` float NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- --------------------------------------------------------
+
+--
+-- Tabellenstruktur für Tabelle `CREATURE_TYPES`
+--
+
+CREATE TABLE IF NOT EXISTS `CREATURE_TYPES` (
+  `TYPE_ID` int(4) NOT NULL,
+  `NAME` varchar(50) NOT NULL,
+  `BILDURL` varchar(50) NOT NULL,
+  `MONSTERTYP1` int(2) NOT NULL,
+  `MONSTERTYP2` int(2) NOT NULL,
+  `DESCRIPTION` varchar(250) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- --------------------------------------------------------
+
+--
+-- Tabellenstruktur für Tabelle `GEO_CREATURES`
+--
+
+CREATE TABLE IF NOT EXISTS `GEO_CREATURES` (
+  `CREATURE_ID` int(20) NOT NULL,
+  `LAT` float NOT NULL,
+  `LNG` float NOT NULL,
+  `SPAWN_TIME` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `LIFE_TIME` float NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- --------------------------------------------------------
+
+--
+-- Tabellenstruktur für Tabelle `USER`
+--
+
+CREATE TABLE IF NOT EXISTS `USER` (
+  `USER_ID` int(20) NOT NULL,
+  `NICKNAME` varchar(50) NOT NULL,
+  `PASSWORD` varchar(50) NOT NULL,
+  `ACTIVATED` tinyint(1) NOT NULL DEFAULT '0'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- --------------------------------------------------------
+
+--
+-- Tabellenstruktur für Tabelle `USER_TO_CREATURE`
+--
+
+CREATE TABLE IF NOT EXISTS `USER_TO_CREATURE` (
+  `USER_ID` int(20) NOT NULL,
+  `CREATURE_ID` int(20) NOT NULL,
+  `CAPTURE_DATE` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
+-- Indizes der exportierten Tabellen
+--
+
+--
+-- Indizes für die Tabelle `ATTRIBUTES`
+--
+ALTER TABLE `ATTRIBUTES`
+  ADD PRIMARY KEY (`ATTRIBUTE_ID`);
+
+--
+-- Indizes für die Tabelle `CREATURES`
+--
+ALTER TABLE `CREATURES`
+  ADD PRIMARY KEY (`CREATURE_ID`),
+  ADD KEY `TYPE_ID` (`TYPE_ID`);
+
+--
+-- Indizes für die Tabelle `CREATURE_TO_ATTRIBUTE`
+--
+ALTER TABLE `CREATURE_TO_ATTRIBUTE`
+  ADD KEY `CREATURE_ID` (`CREATURE_ID`),
+  ADD KEY `ATTRIBUTE_ID` (`ATTRIBUTE_ID`);
+
+--
+-- Indizes für die Tabelle `CREATURE_TYPES`
+--
+ALTER TABLE `CREATURE_TYPES`
+  ADD KEY `TYPE_ID` (`TYPE_ID`);
+
+--
+-- Indizes für die Tabelle `GEO_CREATURES`
+--
+ALTER TABLE `GEO_CREATURES`
+  ADD KEY `LAT` (`LAT`,`LNG`),
+  ADD KEY `CREATURE_ID` (`CREATURE_ID`),
+  ADD KEY `CREATURE_ID_2` (`CREATURE_ID`);
+
+--
+-- Indizes für die Tabelle `USER`
+--
+ALTER TABLE `USER`
+  ADD PRIMARY KEY (`USER_ID`);
+
+--
+-- Indizes für die Tabelle `USER_TO_CREATURE`
+--
+ALTER TABLE `USER_TO_CREATURE`
+  ADD KEY `USER_ID` (`USER_ID`),
+  ADD KEY `CREATURE_ID` (`CREATURE_ID`);
+
+--
+-- AUTO_INCREMENT für exportierte Tabellen
+--
+
+--
+-- AUTO_INCREMENT für Tabelle `ATTRIBUTES`
+--
+ALTER TABLE `ATTRIBUTES`
+  MODIFY `ATTRIBUTE_ID` int(20) NOT NULL AUTO_INCREMENT;
+--
+-- AUTO_INCREMENT für Tabelle `CREATURES`
+--
+ALTER TABLE `CREATURES`
+  MODIFY `CREATURE_ID` int(20) NOT NULL AUTO_INCREMENT;
+--
+-- AUTO_INCREMENT für Tabelle `USER`
+--
+ALTER TABLE `USER`
+  MODIFY `USER_ID` int(20) NOT NULL AUTO_INCREMENT;
+--
+-- Constraints der exportierten Tabellen
+--
+
+--
+-- Constraints der Tabelle `CREATURES`
+--
+ALTER TABLE `CREATURES`
+  ADD CONSTRAINT `CREATURES_ibfk_1` FOREIGN KEY (`TYPE_ID`) REFERENCES `CREATURE_TYPES` (`TYPE_ID`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Constraints der Tabelle `CREATURE_TO_ATTRIBUTE`
+--
+ALTER TABLE `CREATURE_TO_ATTRIBUTE`
+  ADD CONSTRAINT `CREATURE_TO_ATTRIBUTE_ibfk_2` FOREIGN KEY (`ATTRIBUTE_ID`) REFERENCES `ATTRIBUTES` (`ATTRIBUTE_ID`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `CREATURE_TO_ATTRIBUTE_ibfk_1` FOREIGN KEY (`CREATURE_ID`) REFERENCES `CREATURES` (`CREATURE_ID`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Constraints der Tabelle `GEO_CREATURES`
+--
+ALTER TABLE `GEO_CREATURES`
+  ADD CONSTRAINT `GEO_CREATURES_ibfk_1` FOREIGN KEY (`CREATURE_ID`) REFERENCES `CREATURES` (`CREATURE_ID`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Constraints der Tabelle `USER_TO_CREATURE`
+--
+ALTER TABLE `USER_TO_CREATURE`
+  ADD CONSTRAINT `USER_TO_CREATURE_ibfk_2` FOREIGN KEY (`USER_ID`) REFERENCES `USER` (`USER_ID`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `USER_TO_CREATURE_ibfk_1` FOREIGN KEY (`CREATURE_ID`) REFERENCES `CREATURES` (`CREATURE_ID`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
+/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
+/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
