@@ -41,7 +41,7 @@ class mysqlLayer
 
         if ($this->db->connect_error) {
             $this->db = NULL;
-            throw new Exception('Connect Error (' . $mysqli->connect_errno . ') ' . $mysqli->connect_error);
+            throw new Exception('Connect Error (' . $this->db->connect_errno . ') ' . $this->db->connect_error);
         }
         return true;
     }
